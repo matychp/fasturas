@@ -1,11 +1,12 @@
+import { redirect } from "next/navigation";
 import { getServerAuthSession } from "~/server/auth";
 
 export default async function Home() {
   const session = await getServerAuthSession();
 
   if (session === null) {
-    return <main>Not logged in</main>;
+    redirect("/api/auth/signin");
   }
 
-  return <main>Home</main>;
+  return redirect("/items");
 }

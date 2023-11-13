@@ -26,22 +26,21 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`font-sans ${inter.variable}`}>
-        <TRPCReactProvider cookies={cookies().toString()}>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <SessionProvider>
-              <div className="flex h-screen flex-col items-end justify-start gap-4">
+        <div className="flex h-screen flex-col items-end justify-start gap-4">
+          <TRPCReactProvider cookies={cookies().toString()}>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              <SessionProvider>
                 <NavBar />
-
                 {children}
-              </div>
-            </SessionProvider>
-          </ThemeProvider>
-        </TRPCReactProvider>
+              </SessionProvider>
+            </ThemeProvider>
+          </TRPCReactProvider>
+        </div>
       </body>
     </html>
   );
