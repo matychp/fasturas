@@ -5,13 +5,14 @@ import {
   decimal,
   index,
   int,
+  mysqlEnum,
   mysqlTableCreator,
   primaryKey,
   text,
   timestamp,
   varchar,
 } from "drizzle-orm/mysql-core";
-import { createInsertSchema } from "drizzle-zod";
+import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { type AdapterAccount } from "next-auth/adapters";
 import { z } from "zod";
 
@@ -33,6 +34,7 @@ export const items = mysqlTable("items", {
   name: varchar("name", { length: 256 }).notNull(),
   due: date("due").notNull(),
   amount: decimal("amount").notNull(),
+  status: mysqlEnum("status", ["unpaid", "paid"]).notNull().default("unpaid"),
   userId: varchar("user_id", { length: 255 }).notNull(),
 });
 
@@ -41,6 +43,9 @@ export const insertItem = createInsertSchema(items)
     due: z.string(),
   })
   .omit({ id: true, userId: true });
+
+export const selectItem = createSelectSchema(items);
+export type SelectedItem = z.infer<typeof selectItem>;
 
 export const users = mysqlTable("user", {
   id: varchar("id", { length: 255 }).notNull().primaryKey(),

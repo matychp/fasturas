@@ -24,14 +24,15 @@ export default async function Items() {
           <TableHead className="w-[100px]">Id</TableHead>
           <TableHead>Item</TableHead>
           <TableHead>Due Date</TableHead>
-          <TableHead className="text-right">Amount</TableHead>
+          <TableHead>Amount</TableHead>
+          <TableHead>Status</TableHead>
+          <TableHead className="text-right">Actions</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         {items.map((item) => (
           <ItemRow key={item.id} item={item} />
         ))}
-        <TableRow></TableRow>
       </TableBody>
     </Table>
   );

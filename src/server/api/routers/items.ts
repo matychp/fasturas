@@ -27,4 +27,14 @@ export const itemsRouter = createTRPCRouter({
       where: eq(items.userId, ctx.session.user.id),
     });
   }),
+  markAsPaid: protectedProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db
+        .update(items)
+        .set({
+          status: "paid",
+        })
+        .where(eq(items.id, input.id));
+    }),
 });
