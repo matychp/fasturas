@@ -1,6 +1,8 @@
 import { Inter } from "next/font/google";
 import { cookies } from "next/headers";
 
+import { NavBar } from "~/components/layout/navbar";
+import { ThemeProvider } from "~/components/layout/themeProvider";
 import "~/styles/globals.css";
 import { TRPCReactProvider } from "~/trpc/react";
 
@@ -24,7 +26,18 @@ export default function RootLayout({
     <html lang="en">
       <body className={`font-sans ${inter.variable}`}>
         <TRPCReactProvider cookies={cookies().toString()}>
-          {children}
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <div className="flex h-screen flex-col items-end justify-start gap-4">
+              <NavBar />
+
+              {children}
+            </div>
+          </ThemeProvider>
         </TRPCReactProvider>
       </body>
     </html>
