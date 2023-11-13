@@ -21,13 +21,13 @@ export const itemsRouter = createTRPCRouter({
         where: eq(items.id, input.id),
       });
     }),
-  getItems: protectedProcedure.query(({ ctx }) => {
+  getAll: protectedProcedure.query(({ ctx }) => {
     return ctx.db.query.items.findMany({
       orderBy: (items, { desc }) => [desc(items.createdAt)],
       where: eq(items.userId, ctx.session.user.id),
     });
   }),
-  markAsPaid: protectedProcedure
+  pay: protectedProcedure
     .input(z.object({ id: z.number() }))
     .mutation(async ({ ctx, input }) => {
       await ctx.db

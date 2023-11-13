@@ -10,7 +10,7 @@ import { api } from "~/trpc/server";
 import { ItemRow } from "./item-row";
 
 export default async function Items() {
-  const items = await api.item.getItems.query();
+  const items = await api.item.getAll.query();
 
   if (items.length === 0) {
     return <div>There are no items.</div>;

@@ -14,14 +14,14 @@ interface ItemRowProps {
 
 export const ItemRow = ({ item }: ItemRowProps) => {
   const router = useRouter();
-  const markItemAsPaid = api.item.markAsPaid.useMutation();
+  const pay = api.item.pay.useMutation();
 
   const onItemSelected = (itemId: number) => {
     router.push(`/items/${itemId}`);
   };
 
   const onPay = async (itemId: number) => {
-    await markItemAsPaid.mutateAsync({ id: itemId });
+    await pay.mutateAsync({ id: itemId });
     revalidatePath(`/items`);
   };
 
