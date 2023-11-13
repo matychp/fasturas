@@ -1,5 +1,6 @@
 import { ModeToggle } from "~/components/layout/modeToggle";
 import { TypographyH1 } from "~/components/typography/h1";
+import { SessionButton } from "./session-button";
 
 export const NavBar = () => {
   return (
@@ -10,7 +11,10 @@ export const NavBar = () => {
           Fasturas
         </TypographyH1>
       </div>
-      <ModeToggle />
+      <div className="flex justify-center gap-4">
+        <ModeToggle />
+        <SessionButton />
+      </div>
     </div>
   );
 };

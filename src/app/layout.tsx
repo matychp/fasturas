@@ -1,6 +1,7 @@
 import { Inter } from "next/font/google";
 import { cookies } from "next/headers";
 
+import { SessionProvider } from "~/components/SessionProvider";
 import { NavBar } from "~/components/layout/navbar";
 import { ThemeProvider } from "~/components/layout/themeProvider";
 import "~/styles/globals.css";
@@ -32,11 +33,13 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <div className="flex h-screen flex-col items-end justify-start gap-4">
-              <NavBar />
+            <SessionProvider>
+              <div className="flex h-screen flex-col items-end justify-start gap-4">
+                <NavBar />
 
-              {children}
-            </div>
+                {children}
+              </div>
+            </SessionProvider>
           </ThemeProvider>
         </TRPCReactProvider>
       </body>
