@@ -5,6 +5,7 @@ import {
   decimal,
   index,
   int,
+  mediumint,
   mysqlEnum,
   mysqlTableCreator,
   primaryKey,
@@ -31,7 +32,7 @@ export const items = mysqlTable("items", {
   createdAt: timestamp("created_at")
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),
-  name: varchar("name", { length: 256 }).notNull(),
+  nameId: mediumint("name_id").notNull(),
   due: date("due").notNull(),
   amount: decimal("amount").notNull(),
   status: mysqlEnum("status", ["unpaid", "paid"]).notNull().default("unpaid"),
@@ -41,11 +42,26 @@ export const items = mysqlTable("items", {
 export const insertItem = createInsertSchema(items)
   .extend({
     due: z.string(),
+    name: z.string(),
   })
-  .omit({ id: true, userId: true });
+  .omit({ id: true, userId: true, nameId: true });
 
 export const selectItem = createSelectSchema(items);
 export type SelectedItem = z.infer<typeof selectItem>;
+
+export const itemNames = mysqlTable("item_names", {
+  id: mediumint("id", { unsigned: true }).autoincrement().primaryKey(),
+  name: varchar("name", { length: 256 }).notNull().unique(),
+});
+export const selectItemName = createSelectSchema(itemNames);
+export type ItemName = z.infer<typeof selectItemName>;
+
+export const itemsAndNamesRelations = relations(items, ({ one }) => ({
+  name: one(itemNames, {
+    fields: [items.nameId],
+    references: [itemNames.id],
+  }),
+}));
 
 export const users = mysqlTable("user", {
   id: varchar("id", { length: 255 }).notNull().primaryKey(),

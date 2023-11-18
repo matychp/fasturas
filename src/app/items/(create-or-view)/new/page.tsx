@@ -1,6 +1,7 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
+
 import { Button } from "~/components/ui/button";
 import {
   Card,
@@ -11,8 +12,8 @@ import {
 } from "~/components/ui/card";
 import { CurrencyInput } from "~/components/ui/currency-input";
 import { DatePicker } from "~/components/ui/date-picker";
-import { Input } from "~/components/ui/input";
 import { api } from "~/trpc/react";
+import { ItemNames } from "./ItemNames";
 
 const searchParamsSchema = z.object({
   name: z.string().catch(""),
@@ -42,12 +43,13 @@ export default function CreateItem({ searchParams }: CreateItemProps) {
     },
   });
 
-  const onSaveClicked = () => {
-    createItem.mutate({
+  const onSaveClicked = async () => {
+    await createItem.mutateAsync({
       name,
       amount,
       due,
     });
+    router.refresh();
   };
 
   return (
@@ -57,15 +59,15 @@ export default function CreateItem({ searchParams }: CreateItemProps) {
           <CardTitle>Add item</CardTitle>
         </CardHeader>
         <CardContent>
-          <Input
+          <ItemNames
             value={name}
-            onChange={(e) =>
+            onSelectedChange={(newSelected) => {
               updateURLSearchParams({
-                name: e.target.value,
+                name: newSelected,
                 amount,
                 due,
-              })
-            }
+              });
+            }}
           />
           <CurrencyInput
             amount={Number(amount)}

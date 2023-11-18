@@ -1,15 +1,16 @@
 "use client";
+import { ReloadIcon } from "@radix-ui/react-icons";
 import { format } from "date-fns";
-import { revalidatePath } from "next/cache";
 import { useRouter } from "next/navigation";
 
 import { Button } from "~/components/ui/button";
 import { TableCell, TableRow } from "~/components/ui/table";
-import type { SelectedItem } from "~/server/db/schema";
-import { api } from "~/trpc/react";
+import { api, type RouterOutputs } from "~/trpc/react";
+
+type Item = RouterOutputs["item"]["getMany"]["items"][number];
 
 interface ItemRowProps {
-  item: SelectedItem;
+  item: Item;
 }
 
 export const ItemRow = ({ item }: ItemRowProps) => {
@@ -22,12 +23,11 @@ export const ItemRow = ({ item }: ItemRowProps) => {
 
   const onPay = async (itemId: number) => {
     await pay.mutateAsync({ id: itemId });
-    revalidatePath(`/items`);
+    router.refresh();
   };
 
   return (
     <TableRow key={item.id} onClick={() => onItemSelected(item.id)}>
-      <TableCell className="font-medium">{item.id}</TableCell>
       <TableCell>{item.name}</TableCell>
       <TableCell>{format(item.due, "dd/MM/yyyy")}</TableCell>
       <TableCell className="text-right">
@@ -39,10 +39,19 @@ export const ItemRow = ({ item }: ItemRowProps) => {
       <TableCell>{item.status}</TableCell>
       <TableCell className="text-right">
         <Button
-          onClick={() => onPay(item.id)}
-          disabled={item.status === "paid"}
+          variant="secondary"
+          onClick={async (e) => {
+            e.stopPropagation();
+            await onPay(item.id);
+          }}
+          disabled={pay.isLoading || pay.isSuccess || item.status === "paid"}
         >
-          Pay
+          <div className="flex items-center gap-2">
+            {pay.isLoading ? <span>Paying</span> : <span>Pay</span>}
+            {pay.isLoading && (
+              <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+            )}
+          </div>
         </Button>
       </TableCell>
     </TableRow>

@@ -2,11 +2,20 @@
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { loggerLink, unstable_httpBatchStreamLink } from "@trpc/client";
-import { createTRPCReact } from "@trpc/react-query";
+import {
+  createTRPCReact,
+  type inferReactQueryProcedureOptions,
+} from "@trpc/react-query";
+import type { inferRouterInputs, inferRouterOutputs } from "@trpc/server";
 import { useState } from "react";
 
 import { type AppRouter } from "~/server/api/root";
 import { getUrl, transformer } from "./shared";
+
+// infer the types for your router
+export type ReactQueryOptions = inferReactQueryProcedureOptions<AppRouter>;
+export type RouterInputs = inferRouterInputs<AppRouter>;
+export type RouterOutputs = inferRouterOutputs<AppRouter>;
 
 export const api = createTRPCReact<AppRouter>();
 
@@ -35,7 +44,7 @@ export function TRPCReactProvider(props: {
           },
         }),
       ],
-    })
+    }),
   );
 
   return (
