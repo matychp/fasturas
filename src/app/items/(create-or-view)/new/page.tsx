@@ -34,7 +34,7 @@ export default function CreateItem({ searchParams }: CreateItemProps) {
   const updateURLSearchParams = (input: SearchParams) => {
     const newSearchParams = new URLSearchParams(input);
 
-    router.replace(`/items/new?${newSearchParams}`);
+    router.replace(`/items/new?${newSearchParams.toString()}`);
   };
 
   const createItem = api.item.create.useMutation({
