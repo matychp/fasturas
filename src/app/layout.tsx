@@ -26,7 +26,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`font-sans ${inter.variable}`}>
-        <div className="flex h-screen flex-col items-end justify-start gap-4">
+        <div className="flex h-[100dvh] h-screen flex-col items-end justify-start gap-4">
           <TRPCReactProvider cookies={cookies().toString()}>
             <ThemeProvider
               attribute="class"
