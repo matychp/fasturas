@@ -27,10 +27,24 @@ export const itemsRouter = createTRPCRouter({
     }),
   getOne: protectedProcedure
     .input(z.object({ id: z.number() }))
-    .query(({ ctx, input }) => {
-      return ctx.db.query.items.findFirst({
-        where: eq(items.id, input.id),
-      });
+    .output(
+      z
+        .object({ name: z.string(), due: z.date(), amount: z.string() })
+        .optional(),
+    )
+    .query(async ({ ctx, input }) => {
+      const item = await ctx.db
+        .select({
+          name: itemNames.name,
+          due: items.due,
+          amount: items.amount,
+        })
+        .from(items)
+        .innerJoin(itemNames, eq(items.nameId, itemNames.id))
+        .where(eq(items.id, input.id))
+        .limit(1);
+
+      return item[0];
     }),
   getMany: protectedProcedure
     .input(z.object({ page: z.number().catch(0) }).catch({ page: 0 }))
