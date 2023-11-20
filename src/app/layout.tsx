@@ -1,3 +1,4 @@
+import { Analytics } from "@vercel/analytics/react";
 import { Inter } from "next/font/google";
 import { cookies } from "next/headers";
 
@@ -37,6 +38,7 @@ export default function RootLayout({
               <SessionProvider>
                 <NavBar />
                 {children}
+                <Analytics />
               </SessionProvider>
             </ThemeProvider>
           </TRPCReactProvider>
